@@ -1,0 +1,24 @@
+{
+  "author": {
+    "email": "contact@jpventura.com",
+    "name": "JP Ventura",
+    "url": "https://br.linkedin.com/in/jpventura"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-angular": "^8.3.4",
+    "husky": "^4.2.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "node_modules/@commitlint/cli/lib/cli.js -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "keywords": [
+    "changelog",
+    "conventional",
+    "conventional-changelog"
+  ],
+  "private": true,
+  "version": "0.0.0"
+}
