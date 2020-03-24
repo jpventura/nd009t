@@ -100,3 +100,14 @@ tags
 
 ## Persistent undo
 [._]*.un~
+
+# VSCode
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+*.code-workspace
+.vscode/*
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
