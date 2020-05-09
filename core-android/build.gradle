@@ -36,11 +36,15 @@ android {
 }
 
 dependencies {
-    implementation libraries.kotlin
+    api libraries.rxAndroid
+    api libraries.rxJava
+
     implementation libraries.appcompat
     implementation libraries.coreKtx
     implementation libraries.constraintlayout
     implementation libraries.kodein
+    implementation libraries.kodein
+    implementation libraries.kodeinAndroid
     implementation libraries.lifecycleExtensions
     implementation libraries.material
     implementation libraries.viewModelKtx
