@@ -29,8 +29,8 @@ import com.jpventura.domain.bean.Show
 
 interface TelevisionSeriesModel {
 
-    interface Episodes : NestedPersistedModel<String, String, Episode>
+    interface Episodes : NestedPersistedModel<Long, Long, Episode>
 
-    interface Series : PersistedModel<String, Show>
+    interface Series : PersistedModel<Long, Show>
 
 }
