@@ -9,9 +9,9 @@ data class Season(
     val id: Int = 0,
     val image: Any? = null,
     @SerializedName("_links")
-    val links: LinksXX = Links(),
-    val name: String = "",
-    val network: NetworkX = Network(),
+    val links: Links,
+    val name: String,
+    val network: Network,
     val number: Int = 0,
     val premiereDate: String = "",
     val summary: Any? = null,
