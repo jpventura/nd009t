@@ -32,6 +32,7 @@ dependencies {
     implementation libraries.coreKtx
     implementation libraries.constraintlayout
     implementation libraries.lifecycleExtensions
+    implementation libraries.material
     implementation libraries.viewModelKtx
 
     androidTestImplementation instrumentedTestLibraries.espresso

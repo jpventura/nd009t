@@ -43,6 +43,7 @@ ext {
             // Testing libraries
             junit           : "4.13",
             junitExt        : "1.1.1",
+            material        : "1.0.0",
             mockito         : "2.25.1",
             mockitoKotlin   : "2.2.0",
             mockk           : "1.9.3",
@@ -80,6 +81,7 @@ ext {
             lifecycleCommon       : "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle}",
             lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}",
             lottie                : "com.airbnb.android:lottie:${versions.lottie}",
+            material              : "com.google.android.material:material:${versions.material}",
             moshi                 : "com.squareup.moshi:moshi:${versions.moshi}",
             multidex              : "androidx.multidex:multidex:${versions.multidex}",
             moshiKotlin           : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
