@@ -26,10 +26,12 @@ android {
 }
 
 dependencies {
-    implementation libraries.kotlin
     implementation libraries.appcompat
     implementation libraries.coreKtx
     implementation libraries.constraintlayout
+    implementation libraries.kodein
+    implementation libraries.kodeinAndroid
+    implementation libraries.kotlin
     implementation libraries.lifecycleExtensions
     implementation libraries.material
     implementation libraries.viewModelKtx
