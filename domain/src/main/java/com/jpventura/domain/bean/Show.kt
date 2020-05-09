@@ -25,5 +25,17 @@ package com.jpventura.domain.bean
 import com.jpventura.core.domain.bean.Bean
 
 data class Show(
-    override val key: String
-) : Bean<String>
+    override val key: Long,
+
+    val episodes: List<Episode>,
+
+    val genres: List<String>,
+
+    val name: String,
+
+    val poster: String,
+
+    val schedule: Schedule,
+
+    val summary: String
+) : Bean<Long>
