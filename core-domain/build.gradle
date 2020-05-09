@@ -2,6 +2,9 @@ apply plugin: "java-library"
 apply plugin: "kotlin"
 
 dependencies {
+    api libraries.rxAndroid
+    api libraries.rxJava
+
     testApi testLibraries.junit
 
     implementation libraries.kotlin
