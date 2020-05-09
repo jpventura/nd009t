@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -17,8 +18,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField 'String', 'TV_MAZE_API_URL', "\"http://api.tvmaze.com/\""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
-            buildConfigField 'String', 'TVMAZE_API_URL', "\"http://api.tvmaze.com/\""
+            buildConfigField 'String', 'TV_MAZE_API_URL', "\"http://api.tvmaze.com/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -31,16 +37,21 @@ dependencies {
     api libraries.retrofitRxJava
     api libraries.retrofit
     api libraries.retrofitGson
+    api project(path: ':core-domain')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation libraries.kotlin
     implementation libraries.appcompat
     implementation libraries.coreKtx
     implementation libraries.constraintlayout
+    implementation libraries.kodein
+    implementation libraries.kodeinAndroid
     implementation libraries.lifecycleExtensions
     implementation libraries.viewModelKtx
     implementation project(path: ':domain')
 
     androidTestImplementation instrumentedTestLibraries.espresso
     androidTestImplementation instrumentedTestLibraries.junit
+
+    testImplementation testLibraries.junit
 }
