@@ -24,16 +24,11 @@ package com.jpventura.popularmovies.app.di
 
 import android.content.Context
 import com.google.gson.Gson
-import com.jpventura.core.domain.bean.Bean
 import com.jpventura.data.BuildConfig
+import com.jpventura.data.TelevisionSeriesRepository
 import com.jpventura.data.cloud.TVMazeClient
-import com.jpventura.data.cloud.TVMazeEpisodes
-import com.jpventura.domain.bean.Episode
+import com.jpventura.data.cloud.TVMazeSeries
 import com.jpventura.domain.model.TelevisionSeriesModel
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.schedulers.TestScheduler
 import okhttp3.OkHttpClient
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
@@ -44,6 +39,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 fun applicationModule(context: Context) = Kodein.Module("applicationModule") {
+    import(applicationModels())
 }
 
 private fun applicationModels() = Kodein.Module("applicationModels") {
@@ -59,4 +55,21 @@ private fun applicationModels() = Kodein.Module("applicationModels") {
         OkHttpClient.Builder().build()
     }
 
+    bind<TVMazeClient>() with singleton {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.TV_MAZE_API_URL)
+            .client(instance())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(instance())
+            .build()
+            .create(TVMazeClient::class.java)
+    }
+
+    bind<TelevisionSeriesModel.Series>(tag = "cloud") with singleton {
+        TVMazeSeries(instance())
+    }
+
+    bind<TelevisionSeriesModel.Series>() with singleton {
+        TelevisionSeriesRepository(cloud = instance())
+    }
 }
