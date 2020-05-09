@@ -32,33 +32,33 @@ class TVMazeSeries : TelevisionSeriesModel.Series {
 
     override fun clear(): Single<Int> = TODO()
 
-    override fun containsKey(key: String): Single<Boolean> = TODO()
+    override fun containsKey(key: Long): Single<Boolean> = TODO()
 
-    override fun containsKeys(keys: Collection<String>): Single<Boolean> = TODO()
+    override fun containsKeys(keys: Collection<Long>): Single<Boolean> = TODO()
 
     override fun containsValue(value: Show): Completable = TODO()
 
     override fun containsValues(values: Collection<Show>): Completable = TODO()
 
-    override fun create(values: Collection<Show>): Single<List<String>> = TODO()
+    override fun create(values: Collection<Show>): Single<List<Long>> = TODO()
 
-    override fun createOne(value: Show): Single<String> = TODO()
+    override fun createOne(value: Show): Single<Long> = TODO()
 
-    override fun createOrUpdate(values: Collection<Show>): Single<List<String>> = TODO()
+    override fun createOrUpdate(values: Collection<Show>): Single<List<Long>> = TODO()
 
-    override fun createOrUpdateOne(value: Show): Single<String> = TODO()
+    override fun createOrUpdateOne(value: Show): Single<Long> = TODO()
 
-    override fun destroy(keys: Collection<String>): Single<List<String>> = TODO()
+    override fun destroy(keys: Collection<Long>): Single<List<Long>> = TODO()
 
-    override fun destroyOne(key: String): Single<String> = TODO()
+    override fun destroyOne(key: Long): Single<Long> = TODO()
 
-    override fun find(keys: Collection<String>): Observable<List<Show>> = TODO()
+    override fun find(keys: Collection<Long>): Observable<List<Show>> = TODO()
 
     override fun find(query: Map<String, Any>): Observable<List<Show>> = TODO()
 
-    override fun findOne(key: String): Single<Show> = TODO()
+    override fun findOne(key: Long): Single<Show> = TODO()
 
-    override fun keys(): Observable<List<String>> = TODO()
+    override fun keys(): Observable<List<Long>> = TODO()
 
     override fun size(): Observable<Int> = TODO()
 

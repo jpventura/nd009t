@@ -57,7 +57,7 @@ class TelevisionEpisodeRepository : TelevisionSeriesModel.Episodes {
 
     override fun find(query: Map<String, Any>): Observable<List<Episode>> = TODO()
 
-    override fun <U : Bean<String>> find(parent: U): Observable<List<Episode>> = TODO()
+    override fun <U : Bean<Long>> find(parent: U): Observable<List<Episode>> = TODO()
 
     override fun findOne(key: String): Single<Episode> = TODO()
 

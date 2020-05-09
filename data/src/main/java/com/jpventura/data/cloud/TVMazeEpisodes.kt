@@ -29,7 +29,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-class TVMazeEpisodes : TelevisionSeriesModel.Episodes {
+class TVMazeEpisodes(
+    private val client: TVMazeClient
+) : TelevisionSeriesModel.Episodes {
 
     override fun clear(): Single<Int> = TODO()
 
@@ -57,7 +59,7 @@ class TVMazeEpisodes : TelevisionSeriesModel.Episodes {
 
     override fun find(query: Map<String, Any>): Observable<List<Episode>> = TODO()
 
-    override fun <U : Bean<String>> find(parent: U): Observable<List<Episode>> = TODO()
+    override fun <U : Bean<Long>> find(parent: U): Observable<List<Episode>> = TODO()
 
     override fun findOne(key: String): Single<Episode> = TODO()
 
