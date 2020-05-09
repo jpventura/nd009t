@@ -2,7 +2,7 @@ package com.jpventura.popularmovies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.jpventura.popularmovies.series.SeriesFragment
+import com.jpventura.popularmovies.series.ui.SeriesFragment
 
 class MainActivity : AppCompatActivity() {
 
