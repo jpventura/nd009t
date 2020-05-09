@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
 
@@ -26,12 +26,20 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api libraries.okHttpInterceptor
+    api libraries.retrofitRxJava
+    api libraries.retrofit
+    api libraries.retrofitGson
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation libraries.kotlin
+    implementation libraries.appcompat
+    implementation libraries.coreKtx
+    implementation libraries.constraintlayout
+    implementation libraries.lifecycleExtensions
+    implementation libraries.viewModelKtx
     implementation project(path: ':domain')
+
+    androidTestImplementation instrumentedTestLibraries.espresso
+    androidTestImplementation instrumentedTestLibraries.junit
 }
