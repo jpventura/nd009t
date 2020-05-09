@@ -21,7 +21,7 @@
     android:id="@+id/fragment_series"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".series.SeriesFragment">
+    tools:context=".series.ui.SeriesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_series"

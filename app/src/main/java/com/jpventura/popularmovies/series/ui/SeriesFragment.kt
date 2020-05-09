@@ -1,4 +1,4 @@
-package com.jpventura.popularmovies.series
+package com.jpventura.popularmovies.series.ui
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jpventura.popularmovies.R
+import com.jpventura.popularmovies.series.vm.SeriesViewModel
 
 class SeriesFragment : Fragment() {
 
     companion object {
-        fun newInstance() = SeriesFragment()
+        fun newInstance() =
+            SeriesFragment()
     }
 
     private lateinit var viewModel: SeriesViewModel
