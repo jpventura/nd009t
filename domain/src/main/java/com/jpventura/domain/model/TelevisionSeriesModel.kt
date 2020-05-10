@@ -26,11 +26,21 @@ import com.jpventura.core.domain.model.NestedPersistedModel
 import com.jpventura.core.domain.model.PersistedModel
 import com.jpventura.domain.bean.Episode
 import com.jpventura.domain.bean.Show
+import io.reactivex.Single
 
 interface TelevisionSeriesModel {
 
-    interface Episodes : NestedPersistedModel<Long, Long, Episode>
+    interface Episodes : NestedPersistedModel<Long, Long, Episode> {
 
-    interface Series : PersistedModel<Long, Show>
+        fun findOne(parentId: Long, id: Long): Single<Episode>
+
+    }
+
+    interface Series : PersistedModel<Long, Show> {
+
+        // TODO: Create use case instead using repository
+        fun toggleOne(id: Long, isChecked: Boolean): Single<Show>
+
+    }
 
 }

@@ -22,22 +22,26 @@
 
 package com.jpventura.domain.bean
 
-import com.jpventura.core.domain.bean.Bean
+fun episode(block: EpisodeBuilder.() -> Unit): Episode = EpisodeBuilder()
+    .apply(block)
+    .build()
 
-data class Show(
-    override val key: Long,
+class EpisodeBuilder {
+    var id: Long? = null
+    var name: String? = null
+    var number: Int? = null
+    var season: Int? = null
+    var summary: String? = null
+    var image: String? = null
+    var seriesId: Long? = null
 
-    val favorite: Boolean = false,
-
-    val genres: List<String>,
-
-    val name: String,
-
-    val poster: String,
-
-    val rating: Double,
-
-    val schedule: Schedule,
-
-    val summary: String
-) : Bean<Long>
+    fun build(): Episode = Episode(
+        key = requireNotNull(id) { "Missing episode ID" },
+        parentKey = requireNotNull(seriesId) { "Missing series ID" },
+        image = requireNotNull(image) { "Missing episode image" },
+        name = requireNotNull(name) { "Missing episode name" },
+        number = requireNotNull(number) { "Missing episode number" },
+        season = requireNotNull(season) { "Missing episode season" },
+        summary = summary ?: "No summary"
+    )
+}
