@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    style="@style/Widget.PopularMovies.CardView.Header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp">
+
+        <ToggleButton
+            android:id="@+id/toggle_favorite"
+            android:layout_width="32dp"
+            android:layout_height="38dp"
+            android:background="@drawable/button_bookmark"
+            android:textOff=""
+            android:textOn="" />
+
+        <TextView
+            android:id="@+id/text_title"
+            style="@style/TextAppearance.PopularMovies.Headline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Headline" />
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            style="@style/Widget.PopularMovies.RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Short description" />
+
+        <TextView
+            android:id="@+id/text_overview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:text="Lorem ipsum dolor" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

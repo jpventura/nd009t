@@ -38,7 +38,6 @@ class SeriesAdapter : RecyclerViewArrayAdapter<Show, SeriesAdapter.ViewHolder>()
         Glide.with(holder.poster)
             .load(series.poster)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .circleCrop()
             .into(holder.poster)
     }
 

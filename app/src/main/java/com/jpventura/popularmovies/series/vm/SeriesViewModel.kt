@@ -42,19 +42,42 @@ class SeriesViewModel(
     fun findSeries(page: Int? = 1, query: String? = null) {
         subject.onNext(query ?: "")
 
-        disposables.add(series.find(query = mapOf("page" to page, "query" to query))
-            .doOnSubscribe {
+        disposables.add(
+            if (query.isNullOrBlank()) {
+                series.find(query = mapOf("page" to page))
+            } else {
+                series.find(query = mapOf("page" to page, "query" to query))
+            }.doOnSubscribe {
                 state = Loading
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                state = Success(result = it)
-                Timber.w(state.toString())
-            }, {
-                state = Failure(throwable = it)
-                Timber.e(it)
-            }))
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    state = Success(result = it)
+                    Timber.w(state.toString())
+                }, {
+                    state = Failure(throwable = it)
+                    Timber.e(it)
+                })
+        )
     }
 
+    fun search(page: Int? = 1, name: String? = null) {
+        subject.onNext(name ?: "")
+
+        disposables.add(
+            series.find(
+                query = mapOf("page" to page, "name" to name)
+            ).doOnSubscribe {
+                state = Loading
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    state = Success(result = it)
+                    Timber.w(state.toString())
+                }, {
+                    state = Failure(throwable = it)
+                    Timber.e(it)
+                })
+        )
+    }
 }

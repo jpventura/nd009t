@@ -36,6 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.jpventura.popularmovies.episodes.ui.EpisodesActivity"
+            android:theme="@style/Theme.PopularMovies.Transparent" />
     </application>
 
 </manifest>

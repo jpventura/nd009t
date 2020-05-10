@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.jpventura.popularmovies.episodes.vm.EpisodesViewModel
+import com.jpventura.popularmovies.series.vm.SeriesViewModel
 import org.kodein.di.DKodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.direct
@@ -37,6 +39,11 @@ class ViewModelFactory(private val injector: DKodein) : ViewModelProvider.NewIns
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T = with(modelClass) {
         when {
+            isAssignableFrom(EpisodesViewModel::class.java) -> EpisodesViewModel(
+                injector.instance(),
+                injector.instance()
+            )
+            isAssignableFrom(SeriesViewModel::class.java) -> SeriesViewModel(injector.instance())
             else -> throw IllegalArgumentException("Model not supported: ${modelClass.simpleName}")
         }
     } as T

@@ -15,11 +15,67 @@
  - limitations under the License.
 -->
 <resources>
-    <style name="Theme.PopularMovies" parent="Theme.MaterialComponents">
+    <style name="Base.Theme.PopularMovies" parent="Theme.MaterialComponents">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorControlHighlight</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Theme.PopularMovies" parent="Base.Theme.PopularMovies">
+        <item name="android:toolbarStyle">@style/Widget.PopularMovies.Toolbar</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Widget.PopularMovies.CardView" parent="Theme.PopularMovies" />
+    <style name="Theme.PopularMovies.Transparent" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:toolbarStyle">@style/Widget.PopularMovies.Toolbar</item>
+        <item name="android:colorControlHighlight">@color/colorAccentTranslucent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="toolbarStyle">@style/Widget.PopularMovies.Toolbar.Transparent</item>
+    </style>
+
+    <style name="TextAppearance.PopularMovies.Headline" parent="TextAppearance.MaterialComponents.Headline5" />
+
+    <style name="TextAppearance.PopularMovies.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1" />
+
+    <style name="TextAppearance.PopularMovies.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2" />
+
+    <style name="TextAppearance.PopularMovies.Body1" parent="TextAppearance.MaterialComponents.Body1" />
+
+    <style name="TextAppearance.PopularMovies.Body2" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="Widget.PopularMovies.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+    </style>
+
+    <style name="Widget.PopularMovies.CardView.Header" parent="Widget.PopularMovies.CardView">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_height">@dimen/card_layout_height</item>
+        <item name="android:layout_width">@dimen/card_layout_width</item>
+        <item name="cardBackgroundColor">@color/cardBackgroundColor</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+    </style>
+
+    <style name="Widget.PopularMovies.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton" />
+
+    <style name="Widget.PopularMovies.RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:isIndicator">true</item>
+        <item name="android:minHeight">@dimen/size_ratingbar</item>
+        <item name="android:maxHeight">@dimen/size_ratingbar</item>
+        <item name="android:progressDrawable">@drawable/ratingbar</item>
+    </style>
+
+    <style name="Widget.PopularMovies.Toolbar" parent="Base.Theme.PopularMovies">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+    </style>
+
+    <style name="Widget.PopularMovies.Toolbar.Transparent" parent="Base.Theme.PopularMovies">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+    </style>
+
 </resources>

@@ -25,24 +25,33 @@ package com.jpventura.popularmovies.app.di
 import android.content.Context
 import com.google.gson.Gson
 import com.jpventura.data.BuildConfig
+import com.jpventura.data.TelevisionEpisodeRepository
 import com.jpventura.data.TelevisionSeriesRepository
+import com.jpventura.data.cache.CacheEpisodeModel
+import com.jpventura.data.cache.CacheSeriesModel
 import com.jpventura.data.cloud.TVMazeClient
+import com.jpventura.data.cloud.TVMazeEpisodes
 import com.jpventura.data.cloud.TVMazeSeries
 import com.jpventura.domain.model.TelevisionSeriesModel
 import okhttp3.OkHttpClient
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
+import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 fun applicationModule(context: Context) = Kodein.Module("applicationModule") {
-    import(applicationModels())
+    import(applicationModels(context))
 }
 
-private fun applicationModels() = Kodein.Module("applicationModels") {
+private fun applicationModels(context: Context) = Kodein.Module("applicationModels") {
+    bind<Context>() with provider {
+        context
+    }
+
     bind<Gson>() with singleton {
         Gson()
     }
@@ -65,11 +74,28 @@ private fun applicationModels() = Kodein.Module("applicationModels") {
             .create(TVMazeClient::class.java)
     }
 
+    bind<TelevisionSeriesModel.Episodes>(tag = "cache") with singleton {
+        CacheEpisodeModel()
+    }
+
+    bind<TelevisionSeriesModel.Episodes>(tag = "cloud") with singleton {
+        TVMazeEpisodes(instance())
+    }
+
+    bind<TelevisionSeriesModel.Episodes>() with singleton {
+        TelevisionEpisodeRepository(cache = instance("cache"), cloud = instance(tag = "cloud"))
+    }
+
+    bind<TelevisionSeriesModel.Series>(tag = "cache") with singleton {
+        CacheSeriesModel()
+    }
+
     bind<TelevisionSeriesModel.Series>(tag = "cloud") with singleton {
         TVMazeSeries(instance())
     }
 
     bind<TelevisionSeriesModel.Series>() with singleton {
-        TelevisionSeriesRepository(cloud = instance())
+        TelevisionSeriesRepository(cache = instance(tag = "cache"), cloud = instance(tag = "cloud"))
     }
+
 }

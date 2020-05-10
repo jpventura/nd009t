@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Jobsity</string>
+    <string name="body_episodes_summary">No summary available</string>
     <string name="description_item_poster">TV show poster</string>
     <string name="label_series_empty">No series found</string>
+    <string name="label_episodes_empty">No episodes found</string>
+    <string name="menu_series_search">Search</string>
+    <string name="label_item_episode">S%02dE%02d - %s</string>
+    <string name="content_item_episode">Season poster</string>
 </resources>

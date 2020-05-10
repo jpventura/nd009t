@@ -22,25 +22,30 @@
 
 package com.jpventura.popularmovies.series.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import com.jpventura.core.android.ktx.toObservable
+import com.jpventura.core.android.ui.SpacesItemDecoration
+import com.jpventura.domain.bean.Show
 import com.jpventura.popularmovies.R
 import com.jpventura.popularmovies.app.di.viewModel
 import com.jpventura.popularmovies.app.ui.InjectedFragment
 import com.jpventura.popularmovies.databinding.FragmentSeriesBinding
+import com.jpventura.popularmovies.episodes.ui.EpisodesActivity
 import com.jpventura.popularmovies.series.vm.SeriesViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_series.*
 import java.util.concurrent.TimeUnit
 
 class SeriesFragment : InjectedFragment() {
 
-    lateinit var adapter: SeriesAdapter
-    lateinit var binding: FragmentSeriesBinding
-    lateinit var searchView: SearchView
+    private lateinit var adapter: SeriesAdapter
+    private lateinit var binding: FragmentSeriesBinding
+    private lateinit var searchView: SearchView
 
     private val disposables = CompositeDisposable()
     private val vm: SeriesViewModel by viewModel()
@@ -60,6 +65,9 @@ class SeriesFragment : InjectedFragment() {
         binding.vm = vm
 
         adapter = SeriesAdapter()
+        adapter.setOnItemClickListener { _, _, position, _ ->
+            goToEpisodes(adapter.getItem(position))
+        }
 
         return binding.root
     }
@@ -68,7 +76,6 @@ class SeriesFragment : InjectedFragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.dashboard, menu)
         searchView = menu.findItem(R.id.action_search).actionView as SearchView
-        searchView.setQuery(null, false)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -83,16 +90,34 @@ class SeriesFragment : InjectedFragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                if (query != it) {
-                    adapter.clear()
-                }
                 query = it
+                adapter.clear()
             }
             .subscribe {
-                vm.findSeries(query = query)
+                vm.search(name = query)
             }.let {
                 disposables.add(it)
             }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerview_series.adapter = adapter
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing)
+        recyclerview_series.addItemDecoration(SpacesItemDecoration(spacingInPixels))
+        vm.findSeries()
+    }
+
+    private fun goToEpisodes(series: Show) {
+        startActivity(Intent(requireActivity(), EpisodesActivity::class.java).apply {
+            putExtra("genres", series.genres.joinToString(separator = " "))
+            putExtra("medium", series.poster)
+            putExtra("name", series.name)
+            putExtra("poster", series.poster)
+            putExtra("rating", series.rating)
+            putExtra("series", series.key)
+            putExtra("summary", series.summary)
+        })
     }
 
     companion object {
