@@ -22,28 +22,32 @@
 
 package com.jpventura.core.domain.model
 
+import com.jpventura.core.domain.bean.Bean
+import com.jpventura.core.domain.bean.NestedBean
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface NestedModel<U, R, I, V> {
+interface NestedModel<P, K, V : NestedBean<P, K>> : Model<String, V> {
 
-    fun containsKey(key: Triple<U, R, I>): Completable
+    override fun containsKey(key: String): Single<Boolean>
 
-    fun containsKeys(keys: Set<Triple<U, R, I>>): Completable
+    override fun containsKeys(keys: Collection<String>): Single<Boolean>
 
-    fun containsValue(value: V): Completable
+    override fun containsValue(value: V): Completable
 
-    fun containsValues(values: Collection<V>): Completable
+    override fun containsValues(values: Collection<V>): Completable
 
-    fun find(keys: Collection<Triple<U, R, I>>): Observable<List<V>>
+    override fun find(keys: Collection<String>): Observable<List<V>>
 
-    fun find(key: Pair<U, R>): Observable<List<V>>
+    override fun find(query: Map<String, Any?>): Observable<List<V>>
 
-    fun findOne(key: Triple<U, R, I>): Single<V>
+    fun <U : Bean<P>> find(parent: U): Observable<List<V>>
 
-    fun keys(): Observable<List<Triple<U, R, I>>>
+    override fun findOne(key: String): Single<V>
 
-    fun size(): Observable<Int>
+    override fun keys(): Observable<List<String>>
+
+    override fun size(): Observable<Int>
 
 }

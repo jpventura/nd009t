@@ -135,7 +135,7 @@ abstract class MemoryNestedModel<P, K, V : NestedBean<P, K>>(
             values -> values.filter { compoundKey(it) in keys }
     }
 
-    override fun find(query: Map<String, Any>): Observable<List<V>> = subject
+    override fun find(query: Map<String, Any?>): Observable<List<V>> = subject
 
     override fun findOne(key: String): Single<V> = find(setOf(key)).flatMapIterable { it }.firstOrError()
 

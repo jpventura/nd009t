@@ -28,7 +28,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
-class CacheFirstModel<K, V : Bean<K>>(
+open class CacheFirstModel<K, V : Bean<K>>(
     private val cache: PersistedModel<K, V>,
     private val cloud: Model<K, V>
 ) : PersistedModel<K, V> {
@@ -66,7 +66,7 @@ class CacheFirstModel<K, V : Bean<K>>(
             BiFunction { cache, cloud -> cache.putAll(cloud) }
         )
 
-    override fun find(query: Map<String, Any>): Observable<List<V>> =
+    override fun find(query: Map<String, Any?>): Observable<List<V>> =
         Observable.combineLatest(
             cache.find(query),
             cloud.find(query),

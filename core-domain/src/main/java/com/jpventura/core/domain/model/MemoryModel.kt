@@ -128,7 +128,7 @@ abstract class MemoryModel<K, V : Bean<K>>(
             values -> values.filter { it.key in keys }
     }
 
-    override fun find(query: Map<String, Any>): Observable<List<V>> = subject
+    override fun find(query: Map<String, Any?>): Observable<List<V>> = subject
 
     override fun findOne(key: K): Single<V> = find(setOf(key)).flatMapIterable { it }.firstOrError()
 

@@ -38,7 +38,7 @@ interface Model<K, V> {
 
     fun find(keys: Collection<K>): Observable<List<V>>
 
-    fun find(query: Map<String, Any> = emptyMap()): Observable<List<V>>
+    fun find(query: Map<String, Any?> = emptyMap()): Observable<List<V>>
 
     fun findOne(key: K): Single<V>
 

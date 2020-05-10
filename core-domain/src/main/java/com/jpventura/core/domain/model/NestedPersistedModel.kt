@@ -28,7 +28,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface NestedPersistedModel<P, K, V : NestedBean<P, K>> : PersistedModel<String, V> {
+interface NestedPersistedModel<P, K, V : NestedBean<P, K>> : NestedModel<P, K, V>, PersistedModel<String, V> {
 
     override fun clear(): Single<Int>
 
@@ -54,9 +54,9 @@ interface NestedPersistedModel<P, K, V : NestedBean<P, K>> : PersistedModel<Stri
 
     override fun find(keys: Collection<String>): Observable<List<V>>
 
-    override fun find(query: Map<String, Any>): Observable<List<V>>
+    override fun find(query: Map<String, Any?>): Observable<List<V>>
 
-    fun <U : Bean<P>> find(parent: U): Observable<List<V>>
+    override fun <U : Bean<P>> find(parent: U): Observable<List<V>>
 
     override fun findOne(key: String): Single<V>
 
