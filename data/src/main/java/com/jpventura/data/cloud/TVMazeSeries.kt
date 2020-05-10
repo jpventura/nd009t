@@ -22,48 +22,89 @@
 
 package com.jpventura.data.cloud
 
+import com.jpventura.data.ktx.asBean
 import com.jpventura.domain.bean.Show
 import com.jpventura.domain.model.TelevisionSeriesModel
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-class TVMazeSeries : TelevisionSeriesModel.Series {
+class TVMazeSeries(private val client: TVMazeClient) : TelevisionSeriesModel.Series {
 
-    override fun clear(): Single<Int> = TODO()
+    override fun clear(): Single<Int> = Single.error(UnsupportedOperationException())
 
-    override fun containsKey(key: Long): Single<Boolean> = TODO()
+    override fun containsKey(key: Long): Single<Boolean> =
+        Single.error(UnsupportedOperationException())
 
-    override fun containsKeys(keys: Collection<Long>): Single<Boolean> = TODO()
+    override fun containsKeys(keys: Collection<Long>): Single<Boolean> =
+        Single.error(UnsupportedOperationException())
 
-    override fun containsValue(value: Show): Completable = TODO()
+    override fun containsValue(value: Show): Completable =
+        Completable.error(UnsupportedOperationException())
 
-    override fun containsValues(values: Collection<Show>): Completable = TODO()
+    override fun containsValues(values: Collection<Show>): Completable =
+        Completable.error(UnsupportedOperationException())
 
-    override fun create(values: Collection<Show>): Single<List<Long>> = TODO()
+    override fun create(values: Collection<Show>): Single<List<Long>> =
+        Single.error(UnsupportedOperationException())
 
-    override fun createOne(value: Show): Single<Long> = TODO()
+    override fun createOne(value: Show): Single<Long> =
+        Single.error(UnsupportedOperationException())
 
-    override fun createOrUpdate(values: Collection<Show>): Single<List<Long>> = TODO()
+    override fun createOrUpdate(values: Collection<Show>): Single<List<Long>> =
+        Single.error(UnsupportedOperationException())
 
-    override fun createOrUpdateOne(value: Show): Single<Long> = TODO()
+    override fun createOrUpdateOne(value: Show): Single<Long> =
+        Single.error(UnsupportedOperationException())
 
-    override fun destroy(keys: Collection<Long>): Single<List<Long>> = TODO()
+    override fun destroy(keys: Collection<Long>): Single<List<Long>> =
+        Single.error(UnsupportedOperationException())
 
-    override fun destroyOne(key: Long): Single<Long> = TODO()
+    override fun destroyOne(key: Long): Single<Long> =
+        Single.error(UnsupportedOperationException())
 
     override fun find(keys: Collection<Long>): Observable<List<Show>> = TODO()
 
-    override fun find(query: Map<String, Any>): Observable<List<Show>> = TODO()
+    override fun find(query: Map<String, Any?>): Observable<List<Show>> {
+        val name = query["name"] as String?
+        val page: Int = query["page"] as? Int ?: 1
+        val q = query["query"] as String?
 
-    override fun findOne(key: Long): Single<Show> = TODO()
+        val shows = if (name.isNullOrBlank()) {
+            client.getShows(page = page, query = q)
+        } else {
+            client.searchShows(name = name, page = page)
+                .toObservable()
+                .flatMapIterable { it }
+                .sorted { a, b -> -1 * a.score.compareTo(b.score) }
+                .map { it.show }
+                .toList()
+        }
 
-    override fun keys(): Observable<List<Long>> = TODO()
+        return shows.toObservable()
+            .flatMapIterable { it }
+            .sorted { a, b ->
+                val pos = -1 * a.rating.average.compareTo(b.rating.average)
+                if (pos == 0) -1 * a.updated.compareTo(b.updated) else pos
+            }
+            .map { it.asBean() }
+            .toList().toObservable()
 
-    override fun size(): Observable<Int> = TODO()
+    }
 
-    override fun update(values: Collection<Show>): Single<Int> = TODO()
+    override fun findOne(key: Long): Single<Show> = client.getShow(id = key).map { it.asBean() }
 
-    override fun updateOne(value: Show): Single<Int> = TODO()
+    override fun keys(): Observable<List<Long>> = Observable.error(UnsupportedOperationException())
+
+    override fun size(): Observable<Int> = Observable.error(UnsupportedOperationException())
+
+    override fun update(values: Collection<Show>): Single<Int> =
+        Single.error(UnsupportedOperationException())
+
+    override fun toggleOne(id: Long, isChecked: Boolean): Single<Show> =
+        Single.error(UnsupportedOperationException())
+
+    override fun updateOne(value: Show): Single<Int> =
+        Single.error(UnsupportedOperationException())
 
 }

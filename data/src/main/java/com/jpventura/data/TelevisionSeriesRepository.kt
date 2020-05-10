@@ -22,50 +22,25 @@
 
 package com.jpventura.data
 
+import com.jpventura.core.domain.model.CacheFirstModel
 import com.jpventura.domain.bean.Show
 import com.jpventura.domain.model.TelevisionSeriesModel
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
 class TelevisionSeriesRepository(
-    private val cloud: TelevisionSeriesModel.Series
-) : TelevisionSeriesModel.Series {
+    private val cache: TelevisionSeriesModel.Series,
+    cloud: TelevisionSeriesModel.Series
+) : CacheFirstModel<Long, Show>(cache, cloud), TelevisionSeriesModel.Series {
 
-    override fun clear(): Single<Int> = TODO()
+    override fun createOrUpdateOne(value: Show): Single<Long> =
+        cache.updateOne(value).map { value.key }
 
-    override fun containsKey(key: Long): Single<Boolean> = TODO()
+    override fun createOrUpdate(values: Collection<Show>): Single<List<Long>> =
+        update(values).map { values.map { it.key } }
 
-    override fun containsKeys(keys: Collection<Long>): Single<Boolean> = TODO()
-
-    override fun containsValue(value: Show): Completable = TODO()
-
-    override fun containsValues(values: Collection<Show>): Completable = TODO()
-
-    override fun create(values: Collection<Show>): Single<List<Long>> = TODO()
-
-    override fun createOne(value: Show): Single<Long> = TODO()
-
-    override fun createOrUpdate(values: Collection<Show>): Single<List<Long>> = TODO()
-
-    override fun createOrUpdateOne(value: Show): Single<Long> = TODO()
-
-    override fun destroy(keys: Collection<Long>): Single<List<Long>> = TODO()
-
-    override fun destroyOne(key: Long): Single<Long> = TODO()
-
-    override fun find(keys: Collection<Long>): Observable<List<Show>> = TODO()
-
-    override fun find(query: Map<String, Any>): Observable<List<Show>> = TODO()
-
-    override fun findOne(key: Long): Single<Show> = TODO()
-
-    override fun keys(): Observable<List<Long>> = TODO()
-
-    override fun size(): Observable<Int> = TODO()
-
-    override fun update(values: Collection<Show>): Single<Int> = TODO()
-
-    override fun updateOne(value: Show): Single<Int> = TODO()
+    override fun toggleOne(id: Long, isChecked: Boolean): Single<Show> {
+        return cache.toggleOne(id, isChecked)
+    }
 
 }

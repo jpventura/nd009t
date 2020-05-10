@@ -23,6 +23,7 @@
 package com.jpventura.data.cloud
 
 import com.jpventura.data.cloud.entity.Episode
+import com.jpventura.data.cloud.entity.Search
 import com.jpventura.data.cloud.entity.Season
 import com.jpventura.data.cloud.entity.Show
 import io.reactivex.Single
@@ -61,7 +62,15 @@ interface TVMazeClient {
 
     @GET("shows")
     fun getShows(
-        @Query("page") page: Int? = 1
+        @Query("page") page: Int? = 1,
+        @Query("q") query: String? = null
     ): Single<List<Show>>
+
+
+    @GET("search/shows")
+    fun searchShows(
+        @Query("q") name: String,
+        @Query("page") page: Int? = 1
+    ): Single<List<Search>>
 
 }

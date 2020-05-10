@@ -23,6 +23,7 @@
 package com.jpventura.data.cloud
 
 import com.jpventura.core.domain.bean.Bean
+import com.jpventura.data.ktx.asBean
 import com.jpventura.domain.bean.Episode
 import com.jpventura.domain.model.TelevisionSeriesModel
 import io.reactivex.Completable
@@ -33,42 +34,86 @@ class TVMazeEpisodes(
     private val client: TVMazeClient
 ) : TelevisionSeriesModel.Episodes {
 
-    override fun clear(): Single<Int> = TODO()
+    override fun clear(): Single<Int> =
+        Single.error(UnsupportedOperationException())
 
-    override fun containsKey(key: String): Single<Boolean> = TODO()
+    override fun containsKey(key: String): Single<Boolean> =
+        Single.error(UnsupportedOperationException())
 
-    override fun containsKeys(keys: Collection<String>): Single<Boolean> = TODO()
+    override fun containsKeys(keys: Collection<String>): Single<Boolean> =
+        Single.error(UnsupportedOperationException())
 
-    override fun containsValue(value: Episode): Completable = TODO()
+    override fun containsValue(value: Episode): Completable =
+        Completable.error(UnsupportedOperationException())
 
-    override fun containsValues(values: Collection<Episode>): Completable = TODO()
+    override fun containsValues(values: Collection<Episode>): Completable =
+        Completable.error(UnsupportedOperationException())
 
-    override fun create(values: Collection<Episode>): Single<List<String>> = TODO()
+    override fun create(values: Collection<Episode>): Single<List<String>> =
+        Single.error(UnsupportedOperationException())
 
-    override fun createOne(value: Episode): Single<String> = TODO()
+    override fun createOne(value: Episode): Single<String> =
+        Single.error(UnsupportedOperationException())
 
-    override fun createOrUpdate(values: Collection<Episode>): Single<List<String>> = TODO()
+    override fun createOrUpdate(values: Collection<Episode>): Single<List<String>> =
+        Single.error(UnsupportedOperationException())
 
-    override fun createOrUpdateOne(value: Episode): Single<String> = TODO()
+    override fun createOrUpdateOne(value: Episode): Single<String> =
+        Single.error(UnsupportedOperationException())
 
-    override fun destroy(keys: Collection<String>): Single<List<String>> = TODO()
+    override fun destroy(keys: Collection<String>): Single<List<String>> =
+        Single.error(UnsupportedOperationException())
 
-    override fun destroyOne(key: String): Single<String> = TODO()
+    override fun destroyOne(key: String): Single<String> =
+        Single.error(UnsupportedOperationException())
 
-    override fun find(keys: Collection<String>): Observable<List<Episode>> = TODO()
+    override fun find(keys: Collection<String>): Observable<List<Episode>> =
+        Observable.error(UnsupportedOperationException())
 
-    override fun find(query: Map<String, Any>): Observable<List<Episode>> = TODO()
+    override fun find(query: Map<String, Any?>): Observable<List<Episode>> {
+        val page = query["page"] as? Int ?: 1
+        val parentId = query["showId"] as? Long ?: 0L
 
-    override fun <U : Bean<Long>> find(parent: U): Observable<List<Episode>> = TODO()
+        return client.getEpisodes(showId = parentId, page = page)
+            .toObservable()
+            .flatMapIterable { it }
+            .map { it.asBean(parentId) }
+            .toList()
+            .toObservable()
+    }
 
-    override fun findOne(key: String): Single<Episode> = TODO()
+    override fun <U : Bean<Long>> find(parent: U): Observable<List<Episode>> {
+        return client.getEpisodes(showId = parent.key)
+            .toObservable()
+            .flatMapIterable { it }
+            .map { it.asBean(parent.key) }
+            .toList()
+            .toObservable()
+    }
 
-    override fun keys(): Observable<List<String>> = TODO()
+    override fun findOne(key: String): Single<Episode> {
+        val keys = key.split("/").take(2).map { it.toLong() }
+        val parentId = keys[0]
+        val id = keys[1]
 
-    override fun size(): Observable<Int> = TODO()
+        return client.getEpisode(id = id).map {
+            it.asBean(parentId)
+        }
+    }
 
-    override fun update(values: Collection<Episode>): Single<Int> = TODO()
+    override fun findOne(parentId: Long, id: Long): Single<Episode> =
+        client.getEpisode(id).map { it.asBean(parentId) }
 
-    override fun updateOne(value: Episode): Single<Int> = TODO()
+    override fun keys(): Observable<List<String>> =
+        Observable.error(UnsupportedOperationException())
+
+    override fun size(): Observable<Int> =
+        Observable.error(UnsupportedOperationException())
+
+    override fun update(values: Collection<Episode>): Single<Int> =
+        Single.error(UnsupportedOperationException())
+
+    override fun updateOne(value: Episode): Single<Int> =
+        Single.error(UnsupportedOperationException())
 
 }

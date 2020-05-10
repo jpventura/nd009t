@@ -1,8 +1,3 @@
 package com.jpventura.data.cloud.entity
 
-
-import com.google.gson.annotations.SerializedName
-
-data class Rating(
-    val average: Any? = null
-)
+data class Rating(val average: Double = 0.0)

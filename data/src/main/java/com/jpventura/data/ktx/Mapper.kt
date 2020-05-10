@@ -20,22 +20,35 @@
  * IN THE SOFTWARE.
  */
 
-package com.jpventura.data
+package com.jpventura.data.ktx
 
-import com.jpventura.core.domain.model.CacheFirstNestedModel
 import com.jpventura.domain.bean.Episode
-import com.jpventura.domain.model.TelevisionSeriesModel
-import io.reactivex.Single
+import com.jpventura.domain.bean.episode
+import com.jpventura.domain.bean.schedule
+import com.jpventura.domain.bean.Show
+import com.jpventura.domain.bean.show
+import com.jpventura.data.cloud.entity.Episode as EpisodeEntity
+import com.jpventura.data.cloud.entity.Show as Series
 
-class TelevisionEpisodeRepository(
-    cache: TelevisionSeriesModel.Episodes,
-    cloud: TelevisionSeriesModel.Episodes
-) : CacheFirstNestedModel<Long, Long, Episode>(
-    cache = cache,
-    cloud = cloud
-), TelevisionSeriesModel.Episodes {
+fun EpisodeEntity.asBean(parentId: Long): Episode = episode {
+    id = this@asBean.id
+    name = this@asBean.name
+    number = this@asBean.number
+    image = this@asBean.image?.let { if (it.original.isBlank()) it.medium else it.original } ?: ""
+    season = this@asBean.season
+    seriesId = parentId
+    summary = this@asBean.summary
+}
 
-    override fun findOne(parentId: Long, id: Long): Single<Episode> =
-        super.findOne("$parentId/$id")
-
+fun Series.asBean(): Show = show {
+    id = this@asBean.id
+    genres = this@asBean.genres
+    name = this@asBean.name
+    poster = this@asBean.image?.original ?: this@asBean.image?.medium ?: ""
+    rating = this@asBean.rating.average
+    schedule = schedule {
+        days = this@asBean.schedule.days
+        time = this@asBean.schedule.time
+    }
+    summary = this@asBean.summary
 }

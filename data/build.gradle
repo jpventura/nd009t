@@ -7,6 +7,11 @@ android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.buildTools
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
@@ -18,6 +23,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField 'String', 'TV_MAZE_API_URL', "\"http://api.tvmaze.com/\""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             buildConfigField 'String', 'TV_MAZE_API_URL', "\"http://api.tvmaze.com/\""
             minifyEnabled false
@@ -25,6 +35,24 @@ android {
         }
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    sourceSets {
+        test {
+            resources.srcDirs += ['sampledata']
+        }
+        androidTest {
+            resources.srcDirs += ['sampledata']
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -48,5 +76,6 @@ dependencies {
     androidTestImplementation instrumentedTestLibraries.espresso
     androidTestImplementation instrumentedTestLibraries.junit
 
+    testImplementation testLibraries.mockito
     testImplementation testLibraries.junit
 }

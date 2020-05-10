@@ -23,14 +23,19 @@
 package com.jpventura.data.cloud
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.jpventura.data.BuildConfig
+import com.jpventura.data.cloud.entity.Episode
+import com.jpventura.data.cloud.entity.Season
+import com.jpventura.data.cloud.entity.Show
+import com.jpventura.data.di.dataModule
+import com.jpventura.data.ktx.fromJson
+import com.jpventura.data.ktx.getResourceAsStream
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler
-import okhttp3.OkHttpClient
 import org.junit.After
-import org.junit.Test
-
 import org.junit.Before
+import org.junit.Test
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.bind
@@ -38,29 +43,12 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import java.io.InputStream
 
 class TVMazeClientTest : KodeinAware {
 
-    private val client: TVMazeClient by instance()
-    private val testScheduler: TestScheduler by instance()
-
     override val kodein = Kodein.lazy {
-        bind<Gson>() with singleton {
-            Gson()
-        }
-
-        bind<GsonConverterFactory>() with singleton {
-            GsonConverterFactory.create(instance())
-        }
-
-        bind<OkHttpClient>() with singleton {
-            OkHttpClient.Builder().build()
-        }
-
-        bind<TestScheduler>() with singleton {
-            TestScheduler()
-        }
+        import(dataModule())
 
         bind<TVMazeClient>() with singleton {
             Retrofit.Builder()
@@ -73,60 +61,100 @@ class TVMazeClientTest : KodeinAware {
         }
     }
 
+    private val client by instance<TVMazeClient>()
+    private val gson by instance<Gson>()
+    private val testScheduler by instance<TestScheduler>()
+
+    private lateinit var episodes: List<Episode>
+    private lateinit var seasons: List<Season>
+    private lateinit var shows: List<Show>
+
     @Before
+    @Throws(IllegalArgumentException::class)
     fun setUp() {
+        episodes = gson.fromJson(
+            getResourceAsStream(FILE_EPISODES),
+            object : TypeToken<List<Episode>>(){}.type
+        )
+
+        seasons = gson.fromJson(
+            getResourceAsStream(FILE_SEASONS),
+            object : TypeToken<List<Season>>(){}.type
+        )
+
+        shows = gson.fromJson(
+            getResourceAsStream(FILE_SHOWS),
+            object : TypeToken<List<Show>>(){}.type
+        )
+
         RxJavaPlugins.setIoSchedulerHandler { testScheduler }
         RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
     }
 
     @After
     fun tearDown() {
-        RxJavaPlugins.setIoSchedulerHandler { testScheduler }
-        RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
+        RxJavaPlugins.setIoSchedulerHandler { null }
+        RxJavaPlugins.setComputationSchedulerHandler { null }
     }
 
     @Test
     fun `should find one show episode`() {
-        client.getEpisode(id = 1)
+        val got = episodes.first()
+
+        client.getEpisode(id = got.id)
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue(got)
             .dispose()
     }
 
     @Test
     fun `should find show episodes`() {
-        client.getEpisodes(showId = 250, page = 1)
+        client.getEpisodes(showId = GAME_OF_THRONES_ID)
+            .toObservable()
+            .flatMapIterable { it }
+            .firstOrError()
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue(episodes.first())
             .dispose()
     }
 
     @Test
     fun `should find show seasons`() {
-        client.getSeasons(showId = 250, page = 1)
+        client.getSeasons(showId = GAME_OF_THRONES_ID)
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue(seasons)
             .dispose()
     }
 
     @Test
     fun `should find one show season`() {
-        client.getSeason(id = 1)
+        val got = seasons.first()
+
+        client.getSeason(id = got.id)
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue(got)
             .dispose()
     }
 
     @Test
     fun `should find shows`() {
         client.getShows(page = 1)
+            .toObservable()
+            .flatMapIterable { it }
+            .take(10)
+            .toList()
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue(shows.subList(0, 10))
             .dispose()
     }
 
@@ -136,7 +164,33 @@ class TVMazeClientTest : KodeinAware {
             .test()
             .assertComplete()
             .assertNoErrors()
+            .assertValue(shows.first())
             .dispose()
+    }
+
+    @Test
+    fun `should find shows by name`() {
+        client.searchShows(page = 1, name = shows.first().name)
+            .toObservable()
+            .flatMapIterable { it }
+            .sorted { a, b -> a.score.compareTo(b.score) }
+            .firstOrError()
+            .map { it.show }
+            .test()
+            .assertComplete()
+            .assertNoErrors()
+            .assertValue(shows.first())
+            .dispose()
+    }
+
+    companion object {
+
+        private const val FILE_EPISODES = "episodes.json"
+        private const val FILE_SEASONS = "seasons.json"
+        private const val FILE_SHOWS = "shows.json"
+
+        private const val GAME_OF_THRONES_ID = 82L
+
     }
 
 }

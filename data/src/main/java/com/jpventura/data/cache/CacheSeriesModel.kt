@@ -20,22 +20,23 @@
  * IN THE SOFTWARE.
  */
 
-package com.jpventura.data
+package com.jpventura.data.cache
 
-import com.jpventura.core.domain.model.CacheFirstNestedModel
-import com.jpventura.domain.bean.Episode
+import com.jpventura.core.domain.model.MemoryModel
+import com.jpventura.domain.bean.Show
 import com.jpventura.domain.model.TelevisionSeriesModel
 import io.reactivex.Single
 
-class TelevisionEpisodeRepository(
-    cache: TelevisionSeriesModel.Episodes,
-    cloud: TelevisionSeriesModel.Episodes
-) : CacheFirstNestedModel<Long, Long, Episode>(
-    cache = cache,
-    cloud = cloud
-), TelevisionSeriesModel.Episodes {
+class CacheSeriesModel : TelevisionSeriesModel.Series, MemoryModel<Long, Show>() {
 
-    override fun findOne(parentId: Long, id: Long): Single<Episode> =
-        super.findOne("$parentId/$id")
-
+    override fun toggleOne(id: Long, isChecked: Boolean): Single<Show> =
+        super.findOne(id)
+            .flatMap {
+                updateOne(it.copy(favorite = isChecked))
+            }
+            .flatMap {
+                findOne(id)
+            }.map {
+                it
+            }
 }
